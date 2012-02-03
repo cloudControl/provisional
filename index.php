@@ -75,7 +75,11 @@ $app->get('/health-check', function () use ($app) {
 $app->post('/cloudcontrol/resources',
     function (Request $request) use ($app) {
         $json = json_decode($request->getContent(), true);
-        $ressource = $app->controller->create($json);
+        try {
+            $ressource = $app->controller->create($json);
+        } catch (Exception $e) {
+            $app->abort($e->getCode(), $e->getMessage());
+        }
         if ($ressource == false) {
             $app->abort(500, 'Internal Server Error');
         }
@@ -99,7 +103,11 @@ $app->post('/cloudcontrol/resources',
 $app->put('/cloudcontrol/resources/{id}',
     function (Request $request, $id) use ($app) {
         $json = json_decode($request->getContent(), true);
-        $ressource = $app->controller->update($app->escape($id), $json);
+        try {
+            $ressource = $app->controller->update($app->escape($id), $json);
+        } catch (Exception $e) {
+            $app->abort($e->getCode(), $e->getMessage());
+        }
         if ($ressource == false) {
             $app->abort(404, 'Not Found');
         }
@@ -122,7 +130,11 @@ $app->put('/cloudcontrol/resources/{id}',
 $app->delete('/cloudcontrol/resources/{id}', 
     function ($id) use ($app) {
         $id = $app->escape($id);
-        $ressource = $app->controller->delete($id);
+        try {
+            $ressource = $app->controller->delete($id);
+        } catch (Exception $e) {
+            $app->abort($e->getCode(), $e->getMessage());
+        }
         if ($ressource == false) {
             $app->abort(404, 'Not Found');
         }
