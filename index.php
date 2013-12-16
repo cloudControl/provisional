@@ -29,8 +29,8 @@ use Symfony\Component\HttpFoundation\Response;
 function read_credentials() {
     $creds = array();
     // read the credentials from the manifest
-    $manifest_path = __DIR__.'/../cloudcontrol-addon-manifest.json';
-    $file = file_get_contents($manifest_path, false);
+    $parts = explode('/', $_ENV["DEP_NAME"]);
+    $manifest_path = sprintf('%s/cloudcontrol-addon-manifest.%s.json', __DIR__, $parts[0]);
     if (is_string($file)) {
         $json = json_decode($file, true);
         $creds[$json['id']] = $json['api']['password'];
@@ -40,7 +40,7 @@ function read_credentials() {
 
 $app->before(function (Request $request) use ($app) {
     // for the health check just require a shared secret
-    if ($request->getPathInfo() == '/health-check' and 
+    if ($request->getPathInfo() == '/health-check' and
         $request->getMethod() == 'GET'
     ) {
         if ($request->query->get('s', '') == Controller::get_hc_secret()) {
@@ -67,7 +67,7 @@ $app->get('/health-check', function () use ($app) {
         if ($success) {
             return new Response('Ok', 200);
         }
-        
+
         $app->abort(503, 'Not Available');
     }
 );
@@ -127,7 +127,7 @@ $app->put('/cloudcontrol/resources/{id}',
     }
 );
 
-$app->delete('/cloudcontrol/resources/{id}', 
+$app->delete('/cloudcontrol/resources/{id}',
     function ($id) use ($app) {
         $id = $app->escape($id);
         try {
