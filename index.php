@@ -31,6 +31,7 @@ function read_credentials() {
     // read the credentials from the manifest
     $parts = explode('/', $_ENV["DEP_NAME"]);
     $manifest_path = sprintf('%s/cloudcontrol-addon-manifest.%s.json', __DIR__, $parts[0]);
+    $file = file_get_contents($manifest_path, false);
     if (is_string($file)) {
         $json = json_decode($file, true);
         $creds[$json['id']] = $json['api']['password'];
