@@ -103,6 +103,7 @@ $app->post('/cloudcontrol/resources',
 
 $app->put('/cloudcontrol/resources/{id}',
     function (Request $request, $id) use ($app) {
+        error_log('DEBUG update')
         $json = json_decode($request->getContent(), true);
         try {
             $ressource = $app->controller->update($app->escape($id), $json);
