@@ -119,7 +119,7 @@ $app->put('/cloudcontrol/resources/{id}',
         if (array_key_exists('message', $ressource)) {
             $response['message'] = $ressource['message'];
         }
-        if (count($response_array) == 0) $response = '';
+        if (count($response) == 0) $response = '';
         return new Response(
             json_encode($response),
             200,
